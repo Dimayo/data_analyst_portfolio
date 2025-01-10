@@ -2,7 +2,7 @@
 
 [Код проекта в jupyter notebook](subscription_data.ipynb)
 
-Стек: python, pandas, matplotlib, pickle, scipy, seaborn, numpy
+`python` `pandas` `matplotlib` `pickle` `scipy` `seaborn` `numpy`
 
 ## Цель проекта
 

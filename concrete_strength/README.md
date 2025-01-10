@@ -2,7 +2,7 @@
 
 [Код проекта в jupyter notebook](concrete.ipynb)
 
-Стек: python, pandas, seaborn, matplotlib, numpy, sklearn
+`python` `pandas` `seaborn` `matplotlib` `numpy` `sklearn`
 
 ## Цель проекта
 
