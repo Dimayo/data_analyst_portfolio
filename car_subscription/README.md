@@ -1,5 +1,5 @@
 # Анализ данных для сервиса подписки на автомобили
-[Код проекта в jupyter notebook](https://github.com/Dimayo/car_subscription/blob/main/subscription_data.ipynb) <br>
+[Код проекта в jupyter notebook](car_subscription/subscription_data.ipynb) <br>
 Библиотеки python: pandas, matplotlib, pickle, scipy, seaborn, numpy
 
 ## Цель проекта
