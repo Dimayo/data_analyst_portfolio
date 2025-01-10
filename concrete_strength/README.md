@@ -16,7 +16,7 @@
 
 Лучший результат показала модель многослойного персептрона с корнем среднеквадратической ошибки равным 4.9:
 
-``` python
+```python
 model = MLPRegressor(activation='relu', hidden_layer_sizes=(600, 550, 500), alpha=10,
                      learning_rate='adaptive', max_iter=2000, solver='sgd')
 model.fit(x, y)
@@ -24,7 +24,7 @@ model.fit(x, y)
 
 Создан файл, который будет использоваться для проверки качества модели на тестовой выборке:
 
-``` python
+```python
 df_submission = pd.DataFrame(data= {
     'Id': df_test['Id'],
     'Strength': test_pred
