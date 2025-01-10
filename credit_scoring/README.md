@@ -2,7 +2,7 @@
 
 [Код проекта в jupyter notebook](scoring_model.ipynb)
 
-`python` `pandas` `numpy` `matplotlib` `sklearn` `joblib`
+`python` `pandas` `numpy` `matplotlib` `sklearn` `joblib` `tqdm` `os`
 
 ## Цель проекта
 
