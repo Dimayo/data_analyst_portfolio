@@ -49,9 +49,4 @@
 
 </details>
 
-  **Стек:** sql
-
-</details>
-
-
 
