@@ -20,9 +20,3 @@
 **Что сделано:** протестировал гипотезы по конверсии различных источников трафика  
 **Результат:** выявил наиболее эффективные каналы и устройства  
 **Стек:** `python` `pandas` `scipy` `seaborn` `statsmodels`
-
-## [Модель кредитного скоринга](https://github.com/Dimayo/data_analyst_portfolio/tree/main/credit_scoring)  
-
-**Что сделано:** создал модель оценки кредитного риска  
-**Результат:** готовая модель с оценкой качества (ROC-AUC ≈0.69)  
-**Стек:** `python` `pandas` `numpy` `matplotlib` `sklearn` `joblib`

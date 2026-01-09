@@ -1,3 +1,21 @@
-data/
+# виртуальные окружения
+.venv/
+leadcash/
+skillbox/
+
+# кеши питона и ноутбуков
+__pycache__/
+*.pyc
 .ipynb_checkpoints/
-.conda/
+
+# прочее
+.env
+.DS_Store
+**/data/**
+
+# VS Code: игнорировать всё, кроме полезных конфигов
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json

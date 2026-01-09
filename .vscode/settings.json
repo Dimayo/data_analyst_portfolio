@@ -1,0 +1,18 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": false,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell (project venv)": {
+      "source": "PowerShell",
+      "args": [
+        "-NoLogo",
+        "-NoExit",
+        "-Command",
+        "& \"${workspaceFolder}/.venv/Scripts/Activate.ps1\" | Out-Null"
+      ],
+      "icon": "terminal-powershell"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell (project venv)"
+}
