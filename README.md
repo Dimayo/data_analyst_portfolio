@@ -6,6 +6,6 @@ Data Analyst (BI / Product Analytics)
 
 | Проект | Результат | Стек |
 |---|---|---|
-| [A/B-тест + кластеризация](sporting_store) | Персональная скидка **+19% ARPU**, четыре сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
+| [A/B-тест + кластеризация](sporting_store) | Персональная скидка: **+19% ARPU**, четыре сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
 | [LTV / когорты / ROI](fintech_ltv) | Прибыльные когорты и каналы, на которые стоит направлять бюджет | Python, Pandas, Seaborn, Janitor |
 | [Гипотезы по конверсии](car_subscription) | Источники и устройства, которые конвертят лучше | Python, Pandas, SciPy, Statsmodels |
