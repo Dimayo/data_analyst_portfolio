@@ -13,9 +13,8 @@ __pycache__/
 .DS_Store
 **/data/**
 
-# VS Code: игнорировать всё, кроме полезных конфигов
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/launch.json
-!.vscode/tasks.json
+# логи обучения CatBoost
+**/catboost_info/
+
+# локальные настройки редактора
+.vscode/
