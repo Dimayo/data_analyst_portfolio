@@ -18,7 +18,7 @@ Apple, Samsung и Xiaomi в этом кейсе — бренды устройс�
 | Desktop vs mobile | **3.32%** vs 2.8% | desktop выше ≈ на 19% |
 | Москва/СПб vs регионы | **2.99%** vs 2.9% | столицы чуть выше (~3%) |
 
-![Органика vs платный](images/organic_paid.png)
+<img src="images/organic_paid.png" alt="Органика vs платный" width="700">
 
 ## Ответы продукту
 
@@ -27,7 +27,7 @@ Apple, Samsung и Xiaomi в этом кейсе — бренды устройс�
 - **Популярные модели авто:** Skoda Rapid, Lada Vesta, VW Polo · **лучший CR:** Toyota Camry, Kia Rio, Kia Seltos
 - **Соцсети:** CR 1.6% ниже среднего (2.9%) — наращивать бюджет без доработки канала рано
 
-![Конверсия по каналам](images/cr_traffic.png)
+<img src="images/cr_traffic.png" alt="Конверсия по каналам" width="700">
 
 ## Что сделано
 
