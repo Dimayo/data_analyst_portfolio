@@ -1,6 +1,6 @@
 # Портфолио
 
-Дима Маёркин · Data Analyst (BI / Product Analytics), Leadcash.
+Data Analyst (BI / Product Analytics) · Leadcash.
 
 Три учебных кейса по продуктовой аналитике. В каждом README — задача, цифры и вывод; ноутбук — сам расчёт. Сырые данные не публикую (`data/` в `.gitignore`).
 
