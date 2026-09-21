@@ -1,6 +1,6 @@
 # A/B-тест + кластеризация
 
-[Notebook](research.ipynb) · учебный кейс, магазин спортивных товаров
+[Notebook](research.ipynb) · Учебный кейс · Магазин спортивных товаров
 
 **Стек:** Python, Pandas, NumPy, SciPy, Scikit-Learn, CatBoost, K-Prototypes, SQLAlchemy, Seaborn
 
