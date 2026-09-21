@@ -9,21 +9,3 @@ Data Analyst (BI / Product Analytics) · Leadcash.
 | [A/B-тест + кластеризация](sporting_store) | Персональная скидка: **+19% ARPU**, четыре сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
 | [LTV / когорты / ROI](fintech_ltv) | Прибыльные когорты и каналы, куда имеет смысл класть бюджет | Python, Pandas, Seaborn, Janitor |
 | [Гипотезы по конверсии](car_subscription) | Источники и устройства, которые конвертят лучше | Python, Pandas, SciPy, Statsmodels |
-
-## A/B-тест + кластеризация
-
-Магазин спортивных товаров. Персональная скидка подняла ARPU на **19.3%** (26 573 vs 22 271, 95% ДИ разницы [2 723; 5 882]). Дальше — четыре сегмента и propensity-модель для top-N.
-
-![Средний ARPU в группах A/B](sporting_store/images/ab_arpu.png)
-
-## LTV / когорты / ROI
-
-Финансовый сервис. Наибольший накопительный LTV — когорты июня и сентября 2016, по выручке сильнее источники 2, 4 и 5.
-
-![Накопительный LTV](fintech_ltv/images/cumulative_ltv.png)
-
-## Гипотезы по конверсии
-
-Подписка на автомобили, данные Google Analytics. Органика конвертит **4.44%** против **2.34%** у платного трафика. Apple и Samsung здесь — бренды устройств, Skoda и Lada — модели авто.
-
-![Органика vs платный](car_subscription/images/organic_paid.png)
