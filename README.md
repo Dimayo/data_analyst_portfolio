@@ -7,5 +7,5 @@ Data Analyst (BI / Product Analytics)
 | Проект | Результат | Стек |
 |---|---|---|
 | [A/B-тест + кластеризация](sporting_store) | Скидка в email: **+19%** к средней выручке на клиента; 4 сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
-| [LTV / когорты / ROI](fintech_ltv) | Куда класть бюджет: каналы с лучшим LTV — органика, прямой и контекст | Python, Pandas, Seaborn, Janitor |
+| [LTV / когорты / ROI](fintech_ltv) | Лучшие каналы по LTV — органика, прямой и контекст | Python, Pandas, Seaborn, Janitor |
 | [Гипотезы по конверсии](car_subscription) | Органика конвертит почти в 2 раза лучше платного (4.4% vs 2.3%); desktop выше mobile на ~19% | Python, Pandas, SciPy, Statsmodels |
