@@ -6,6 +6,6 @@ Data Analyst (BI / Product Analytics)
 
 | Проект | Результат | Стек |
 |---|---|---|
-| [A/B-тест + кластеризация](sporting_store) | Персональная скидка: **+19% ARPU**, четыре сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
-| [LTV / когорты / ROI](fintech_ltv) | Когорты сент.–окт. 2016 с макс. LTV; топ-каналы — органика, прямой и контекст | Python, Pandas, Seaborn, Janitor |
-| [Гипотезы по конверсии](car_subscription) | Органика CR **4.4%** vs **2.3%** у платного; desktop выше mobile на ~**19%** | Python, Pandas, SciPy, Statsmodels |
+| [A/B-тест + кластеризация](sporting_store) | Скидка в email: **+19%** к средней выручке на клиента; 4 сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
+| [LTV / когорты / ROI](fintech_ltv) | Куда класть бюджет: каналы с лучшим LTV — органика, прямой и контекст | Python, Pandas, Seaborn, Janitor |
+| [Гипотезы по конверсии](car_subscription) | Органика конвертит почти в 2 раза лучше платного (4.4% vs 2.3%); desktop выше mobile на ~19% | Python, Pandas, SciPy, Statsmodels |
