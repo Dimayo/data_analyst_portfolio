@@ -1,4 +1,4 @@
-# Дашборды DataLens
+# Показатели продаж маркетплейса
 
 [Продажи на маркетплейсах](https://datalens.yandex/40rp1h6ei5g4q?_share_link=public) · [Категорийные менеджеры](https://datalens.yandex/3wccqwhti1wqp?_share_link=public) · [Отчет по продажам](https://datalens.yandex/unm6r32rje2og?_share_link=public) · Учебный кейс · Маркетплейс
 
