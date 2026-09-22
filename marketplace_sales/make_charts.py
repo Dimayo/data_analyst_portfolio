@@ -48,8 +48,8 @@ def fmt_money(x, _pos=None):
 
 
 def save_chart(fig, path: Path):
-    # Fill the fixed canvas — same approach as other 700x380 portfolio charts
-    fig.subplots_adjust(left=0.08, right=0.995, top=0.90, bottom=0.14)
+    # Fill the fixed 700x380 canvas as tightly as other portfolio charts
+    fig.subplots_adjust(left=0.075, right=0.995, top=0.90, bottom=0.125)
     fig.savefig(path, dpi=DPI, facecolor=FIG_BG)
     plt.close(fig)
     im = Image.open(path)
