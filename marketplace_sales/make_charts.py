@@ -10,19 +10,23 @@ OUT = Path(__file__).resolve().parent / "images"
 DPI = 100
 FIGSIZE = (7.0, 3.8)  # 700x380 px at 100 dpi
 
+# Same axes grey as other cases (seaborn whitegrid / sporting_store ab_arpu)
+AXES_BG = "#EAEAF2"
+FIG_BG = "white"
 BLUE = "#4C78A8"
 BLUE_LIGHT = "#9ECAE1"
 
 
 def style():
-    # Same as other cases: white figure, light-grey axes (seaborn whitegrid)
     sns.set_theme(style="whitegrid", context="notebook")
     plt.rcParams.update(
         {
             "figure.figsize": FIGSIZE,
             "figure.dpi": DPI,
             "savefig.dpi": DPI,
-            "figure.facecolor": "white",
+            "figure.facecolor": FIG_BG,
+            "axes.facecolor": AXES_BG,
+            "savefig.facecolor": FIG_BG,
             "font.size": 10,
             "axes.titlesize": 12,
             "axes.titleweight": "medium",
@@ -69,6 +73,8 @@ def sales_dynamics():
     )
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
+    fig.patch.set_facecolor(FIG_BG)
+    ax.set_facecolor(AXES_BG)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
     ax.fill_between(months, values, alpha=0.15, color=BLUE)
     ax.set_title("Динамика продаж")
@@ -78,7 +84,7 @@ def sales_dynamics():
     ax.tick_params(axis="x", rotation=25)
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_report.png")
+    fig.savefig(OUT / "sales_report.png", facecolor=FIG_BG)
     plt.close(fig)
 
 
@@ -90,6 +96,8 @@ def category_managers():
     w = 0.36
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
+    fig.patch.set_facecolor(FIG_BG)
+    ax.set_facecolor(AXES_BG)
     ax.bar(x - w / 2, fact, w, label="Факт", color=BLUE, zorder=3)
     ax.bar(x + w / 2, plan, w, label="План", color=BLUE_LIGHT, zorder=3)
     ax.set_xticks(x)
@@ -99,7 +107,7 @@ def category_managers():
     ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
-    fig.savefig(OUT / "category_managers.png")
+    fig.savefig(OUT / "category_managers.png", facecolor=FIG_BG)
     plt.close(fig)
 
 
@@ -111,12 +119,16 @@ def main():
     from PIL import Image
 
     for name in ("sales_report.png", "category_managers.png"):
-        im = Image.open(OUT / name)
+        path = OUT / name
+        im = Image.open(path)
         print(name, im.size)
         if im.size != (700, 380):
             im = im.resize((700, 380), Image.Resampling.LANCZOS)
-            im.save(OUT / name)
+            im.save(path)
             print("  resized ->", im.size)
+        # sample plot-area pixel (should be ~EAEAF2)
+        px = im.getpixel((200, 80))
+        print("  sample", px)
 
 
 if __name__ == "__main__":
