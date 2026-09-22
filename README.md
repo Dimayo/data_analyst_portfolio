@@ -6,7 +6,7 @@ Data Analyst (BI / Product Analytics)
 
 | Проект | Результат | Стек |
 |---|---|---|
-| [Продажи на маркетплейсах](marketplace_sales) | Дашборд DataLens: продажи **5,62 млрд** ₽; план выполнен; электроника лидирует по выручке | Yandex DataLens |
+| [Аналитика маркетплейса](marketplace_sales) | Дашборд DataLens: продажи **5,62 млрд** ₽; план выполнен; электроника лидирует по выручке | Yandex DataLens |
 | [A/B-тест + кластеризация](sporting_store) | Скидка в email: **+19% ARPU**; 4 сегмента для следующих рассылок | Python, Pandas, SciPy, CatBoost, K-Prototypes |
 | [LTV / когорты / ROI](fintech_ltv) | Концентрация выручки: ≈ **5%** клиентов → **80%** выручки | Python, Pandas, Seaborn, Janitor |
 | [Гипотезы по конверсии](car_subscription) | Органика CR **4.4%** vs **2.3%** у платного; desktop выше mobile на ≈ **19%** | Python, Pandas, SciPy, Statsmodels |
