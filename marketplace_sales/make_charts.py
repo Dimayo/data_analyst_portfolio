@@ -1,50 +1,34 @@
-"""Generate marketplace chart PNGs at 700x380 — dark DataLens-like style, one chart each."""
+"""Generate marketplace chart PNGs at 700x380 — light theme, one chart each."""
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
+import seaborn as sns
 
 OUT = Path(__file__).resolve().parent / "images"
 DPI = 100
 FIGSIZE = (7.0, 3.8)  # 700x380 px at 100 dpi
 
-BG = "#1e2229"
-AX_BG = "#1e2229"
-GRID = "#2f3540"
-TEXT = "#d8dde6"
-MUTED = "#9aa3b2"
-BLUE = "#4c8bf5"
-BLUE_LIGHT = "#7aa7f7"
-BLUE_FILL = "#4c8bf5"
+BLUE = "#4C78A8"
+BLUE_LIGHT = "#9ECAE1"
 
 
 def style():
+    sns.set_theme(style="whitegrid", context="notebook")
     plt.rcParams.update(
         {
             "figure.figsize": FIGSIZE,
             "figure.dpi": DPI,
             "savefig.dpi": DPI,
-            "figure.facecolor": BG,
-            "axes.facecolor": AX_BG,
-            "axes.edgecolor": GRID,
-            "axes.labelcolor": MUTED,
-            "axes.titlecolor": TEXT,
-            "text.color": TEXT,
-            "xtick.color": MUTED,
-            "ytick.color": MUTED,
-            "grid.color": GRID,
-            "grid.linestyle": "-",
-            "grid.linewidth": 0.6,
+            "figure.facecolor": "white",
+            "axes.facecolor": "white",
             "font.size": 10,
             "axes.titlesize": 12,
             "axes.titleweight": "medium",
             "axes.labelsize": 10,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
-            "legend.facecolor": BG,
-            "legend.edgecolor": GRID,
-            "legend.labelcolor": TEXT,
         }
     )
 
@@ -86,23 +70,19 @@ def sales_dynamics():
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
-    ax.fill_between(months, values, alpha=0.18, color=BLUE_FILL)
+    ax.fill_between(months, values, alpha=0.15, color=BLUE)
     ax.set_title("Динамика продаж")
     ax.set_ylabel("Выручка")
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
     ax.set_ylim(0, 1.45e9)
     ax.tick_params(axis="x", rotation=25)
-    ax.grid(True, axis="both")
     ax.set_axisbelow(True)
-    for spine in ax.spines.values():
-        spine.set_color(GRID)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_report.png", facecolor=BG)
+    fig.savefig(OUT / "sales_report.png", facecolor="white")
     plt.close(fig)
 
 
 def category_managers():
-    # One chart: fact vs plan by quarters (managers tab)
     quarters = ["апр '19", "июл '19", "окт '19"]
     fact = np.array([41, 521, 2395])
     plan = np.array([40, 467, 2511])
@@ -116,13 +96,10 @@ def category_managers():
     ax.set_xticklabels(quarters)
     ax.set_ylabel("млн ₽")
     ax.set_title("Факт и план по кварталам")
-    ax.legend(fontsize=9, loc="upper left", frameon=True)
-    ax.grid(True, axis="y")
+    ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
-    for spine in ax.spines.values():
-        spine.set_color(GRID)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
-    fig.savefig(OUT / "category_managers.png", facecolor=BG)
+    fig.savefig(OUT / "category_managers.png", facecolor="white")
     plt.close(fig)
 
 
