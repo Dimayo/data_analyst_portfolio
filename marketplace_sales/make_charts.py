@@ -1,4 +1,4 @@
-"""Generate marketplace chart PNGs at 700x380 — light theme, one chart each."""
+"""Generate marketplace chart PNGs at 700x380 — light grey seaborn style, one chart each."""
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -15,6 +15,7 @@ BLUE_LIGHT = "#9ECAE1"
 
 
 def style():
+    # Same as other cases: white figure, light-grey axes (seaborn whitegrid)
     sns.set_theme(style="whitegrid", context="notebook")
     plt.rcParams.update(
         {
@@ -22,7 +23,6 @@ def style():
             "figure.dpi": DPI,
             "savefig.dpi": DPI,
             "figure.facecolor": "white",
-            "axes.facecolor": "white",
             "font.size": 10,
             "axes.titlesize": 12,
             "axes.titleweight": "medium",
@@ -78,7 +78,7 @@ def sales_dynamics():
     ax.tick_params(axis="x", rotation=25)
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_report.png", facecolor="white")
+    fig.savefig(OUT / "sales_report.png")
     plt.close(fig)
 
 
@@ -99,7 +99,7 @@ def category_managers():
     ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
-    fig.savefig(OUT / "category_managers.png", facecolor="white")
+    fig.savefig(OUT / "category_managers.png")
     plt.close(fig)
 
 
