@@ -45,28 +45,31 @@ def fmt_money(x, _pos=None):
     return f"{x:,.0f}"
 
 
-def trim_top(im: Image.Image, keep_pad: int = 4) -> Image.Image:
+def trim_edges(im: Image.Image, keep_pad: int = 4) -> Image.Image:
+    """Crop excess white on top/bottom/right; keep left padding for y-label."""
     arr = np.asarray(im.convert("RGB"))
     mask = (arr < 248).any(axis=2)
     ys = np.where(mask.any(axis=1))[0]
-    if len(ys) == 0:
+    xs = np.where(mask.any(axis=0))[0]
+    if len(ys) == 0 or len(xs) == 0:
         return im
     top = max(0, int(ys.min()) - keep_pad)
-    if top <= 0:
-        return im
-    cropped = im.crop((0, top, im.size[0], im.size[1]))
+    bottom = min(im.size[1], int(ys.max()) + 1 + keep_pad)
+    left = max(0, int(xs.min()) - keep_pad)
+    right = min(im.size[0], int(xs.max()) + 1 + keep_pad)
+    cropped = im.crop((left, top, right, bottom))
     return cropped.resize(TARGET, Image.Resampling.LANCZOS)
 
 
 def save_chart(fig, path: Path):
-    # Left: snug to y-label, no clipping
-    fig.subplots_adjust(left=0.10, right=0.985, top=0.93, bottom=0.14)
+    # Left: snug to y-label; bottom tighter for rotated tick labels
+    fig.subplots_adjust(left=0.10, right=0.99, top=0.93, bottom=0.16)
     fig.savefig(path, dpi=DPI, facecolor=FIG_BG)
     plt.close(fig)
     im = Image.open(path)
     if im.size != TARGET:
         im = im.resize(TARGET, Image.Resampling.LANCZOS)
-    im = trim_top(im, keep_pad=4)
+    im = trim_edges(im, keep_pad=4)
     im.save(path)
 
 
@@ -99,7 +102,10 @@ def sales_dynamics():
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     fig.patch.set_facecolor(FIG_BG)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
-    ax.fill_between(months, values, alpha=0.15, color=BLUE)
+    ax.fill_between(np.arange(len(months)), values, alpha=0.15, color=BLUE)
+    ax.set_xticks(np.arange(len(months)))
+    ax.set_xticklabels(months)
+    ax.set_xlim(-0.35, len(months) - 0.65)
     ax.set_title("Динамика продаж", fontsize=12, pad=4)
     ax.set_ylabel("Выручка", labelpad=6)
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
