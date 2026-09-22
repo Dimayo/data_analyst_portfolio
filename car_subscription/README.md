@@ -1,6 +1,6 @@
 # Гипотезы по конверсии
 
-[Notebook](subscription_data.ipynb) · Учебный кейс · Подписка на автомобили
+[Ноутбук](subscription_data.ipynb) · Учебный кейс · Подписка на автомобили
 
 **Стек:** Python, Pandas, NumPy, SciPy, Statsmodels, Seaborn, Matplotlib
 

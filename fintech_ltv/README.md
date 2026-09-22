@@ -1,6 +1,6 @@
 # LTV / когорты / ROI
 
-[Notebook](analysis.ipynb) · Учебный кейс · Финансовый сервис
+[Ноутбук](analysis.ipynb) · Учебный кейс · Финансовый сервис
 
 **Стек:** Python, Pandas, NumPy, Seaborn, Matplotlib, Janitor
 
