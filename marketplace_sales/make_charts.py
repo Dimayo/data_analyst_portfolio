@@ -47,15 +47,30 @@ def fmt_money(x, _pos=None):
     return f"{x:,.0f}"
 
 
+def trim_top(im: Image.Image, keep_pad: int = 4) -> Image.Image:
+    """Crop excess white above the title, then restore 700x380."""
+    arr = np.asarray(im.convert("RGB"))
+    mask = (arr < 248).any(axis=2)
+    ys = np.where(mask.any(axis=1))[0]
+    if len(ys) == 0:
+        return im
+    top = max(0, int(ys.min()) - keep_pad)
+    if top <= 0:
+        return im
+    cropped = im.crop((0, top, im.size[0], im.size[1]))
+    return cropped.resize(TARGET, Image.Resampling.LANCZOS)
+
+
 def save_chart(fig, path: Path):
-    # Fill the fixed 700x380 canvas as tightly as other portfolio charts
-    fig.subplots_adjust(left=0.075, right=0.995, top=0.90, bottom=0.125)
+    # Left margin for y-label; top tight so title sits near the edge
+    fig.subplots_adjust(left=0.14, right=0.985, top=0.93, bottom=0.14)
     fig.savefig(path, dpi=DPI, facecolor=FIG_BG)
     plt.close(fig)
     im = Image.open(path)
     if im.size != TARGET:
         im = im.resize(TARGET, Image.Resampling.LANCZOS)
-        im.save(path)
+    im = trim_top(im, keep_pad=4)
+    im.save(path)
 
 
 def sales_dynamics():
@@ -89,8 +104,8 @@ def sales_dynamics():
     ax.set_facecolor(AXES_BG)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
     ax.fill_between(months, values, alpha=0.15, color=BLUE)
-    ax.set_title("Динамика продаж", fontsize=12, pad=6)
-    ax.set_ylabel("Выручка")
+    ax.set_title("Динамика продаж", fontsize=12, pad=4)
+    ax.set_ylabel("Выручка", labelpad=6)
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
     ax.set_ylim(0, 1.45e9)
     ax.tick_params(axis="x", rotation=25)
@@ -112,8 +127,8 @@ def category_managers():
     ax.bar(x + w / 2, plan, w, label="План", color=BLUE_LIGHT, zorder=3)
     ax.set_xticks(x)
     ax.set_xticklabels(quarters)
-    ax.set_ylabel("млн ₽")
-    ax.set_title("Факт и план по кварталам", fontsize=12, pad=6)
+    ax.set_ylabel("млн ₽", labelpad=6)
+    ax.set_title("Факт и план по кварталам", fontsize=12, pad=4)
     ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
     save_chart(fig, OUT / "plan_vs_fact.png")
@@ -124,12 +139,22 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sales_dynamics()
     category_managers()
+    # remove old cache-bust names if present
+    for old in ("sales_trend.png", "fact_plan.png"):
+        p = OUT / old
+        if p.exists():
+            p.unlink()
     for name in ("sales_dynamics.png", "plan_vs_fact.png"):
         im = Image.open(OUT / name)
         arr = np.asarray(im.convert("RGB"))
         mask = (arr < 250).any(axis=2)
         ys, xs = np.where(mask)
-        pads = (int(xs.min()), int(ys.min()), im.size[0] - int(xs.max()) - 1, im.size[1] - int(ys.max()) - 1)
+        pads = (
+            int(xs.min()),
+            int(ys.min()),
+            im.size[0] - int(xs.max()) - 1,
+            im.size[1] - int(ys.max()) - 1,
+        )
         print(name, im.size, "pads LTRB", pads)
 
 
