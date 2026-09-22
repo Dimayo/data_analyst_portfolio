@@ -84,7 +84,7 @@ def sales_dynamics():
     ax.tick_params(axis="x", rotation=25)
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_report.png", facecolor=FIG_BG)
+    fig.savefig(OUT / "sales_dynamics.png", facecolor=FIG_BG)
     plt.close(fig)
 
 
@@ -107,7 +107,7 @@ def category_managers():
     ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
-    fig.savefig(OUT / "category_managers.png", facecolor=FIG_BG)
+    fig.savefig(OUT / "plan_vs_fact.png", facecolor=FIG_BG)
     plt.close(fig)
 
 
@@ -118,7 +118,7 @@ def main():
     category_managers()
     from PIL import Image
 
-    for name in ("sales_report.png", "category_managers.png"):
+    for name in ("sales_dynamics.png", "plan_vs_fact.png"):
         path = OUT / name
         im = Image.open(path)
         print(name, im.size)
@@ -126,7 +126,6 @@ def main():
             im = im.resize((700, 380), Image.Resampling.LANCZOS)
             im.save(path)
             print("  resized ->", im.size)
-        # sample plot-area pixel (should be ~EAEAF2)
         px = im.getpixel((200, 80))
         print("  sample", px)
 
