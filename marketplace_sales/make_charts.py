@@ -1,16 +1,19 @@
-"""Generate marketplace chart PNGs at 700x380 — light grey seaborn style, one chart each."""
+"""Generate marketplace chart PNGs at 700x380 — tight fill like other cases."""
+from io import BytesIO
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
 import seaborn as sns
+from PIL import Image
 
 OUT = Path(__file__).resolve().parent / "images"
 DPI = 100
-FIGSIZE = (7.0, 3.8)  # 700x380 px at 100 dpi
+FIGSIZE = (7.0, 3.8)
+TARGET = (700, 380)
+PAD = 2
 
-# Same axes grey as other cases (seaborn whitegrid / sporting_store ab_arpu)
 AXES_BG = "#EAEAF2"
 FIG_BG = "white"
 BLUE = "#4C78A8"
@@ -46,6 +49,35 @@ def fmt_money(x, _pos=None):
     return f"{x:,.0f}"
 
 
+def fit_canvas(im: Image.Image, size=TARGET, pad=PAD, bg=(255, 255, 255)) -> Image.Image:
+    """Crop near-white margins, scale up to fill canvas, keep exact size."""
+    arr = np.asarray(im.convert("RGB"))
+    mask = (arr < 250).any(axis=2)
+    ys, xs = np.where(mask)
+    if len(xs) == 0:
+        return im.resize(size, Image.Resampling.LANCZOS)
+    cropped = im.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+    tw, th = size[0] - 2 * pad, size[1] - 2 * pad
+    cw, ch = cropped.size
+    scale = min(tw / cw, th / ch)
+    nw, nh = max(1, int(round(cw * scale))), max(1, int(round(ch * scale)))
+    resized = cropped.resize((nw, nh), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGB", size, bg)
+    canvas.paste(resized, ((size[0] - nw) // 2, (size[1] - nh) // 2))
+    return canvas
+
+
+def save_chart(fig, path: Path):
+    buf = BytesIO()
+    # Tight margins so content fills the figure (like avg_cheque / ab_arpu)
+    fig.subplots_adjust(left=0.09, right=0.995, top=0.88, bottom=0.16)
+    fig.savefig(buf, format="png", dpi=DPI, facecolor=FIG_BG)
+    plt.close(fig)
+    buf.seek(0)
+    im = Image.open(buf)
+    fit_canvas(im).save(path)
+
+
 def sales_dynamics():
     months = [
         "апр '19",
@@ -77,15 +109,13 @@ def sales_dynamics():
     ax.set_facecolor(AXES_BG)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
     ax.fill_between(months, values, alpha=0.15, color=BLUE)
-    ax.set_title("Динамика продаж")
+    ax.set_title("Динамика продаж", fontsize=12, pad=8)
     ax.set_ylabel("Выручка")
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
     ax.set_ylim(0, 1.45e9)
     ax.tick_params(axis="x", rotation=25)
     ax.set_axisbelow(True)
-    fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_dynamics.png", facecolor=FIG_BG)
-    plt.close(fig)
+    save_chart(fig, OUT / "sales_dynamics.png")
 
 
 def category_managers():
@@ -103,12 +133,10 @@ def category_managers():
     ax.set_xticks(x)
     ax.set_xticklabels(quarters)
     ax.set_ylabel("млн ₽")
-    ax.set_title("Факт и план по кварталам")
+    ax.set_title("Факт и план по кварталам", fontsize=12, pad=8)
     ax.legend(fontsize=9, loc="upper left")
     ax.set_axisbelow(True)
-    fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
-    fig.savefig(OUT / "plan_vs_fact.png", facecolor=FIG_BG)
-    plt.close(fig)
+    save_chart(fig, OUT / "plan_vs_fact.png")
 
 
 def main():
@@ -116,18 +144,13 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sales_dynamics()
     category_managers()
-    from PIL import Image
-
     for name in ("sales_dynamics.png", "plan_vs_fact.png"):
-        path = OUT / name
-        im = Image.open(path)
-        print(name, im.size)
-        if im.size != (700, 380):
-            im = im.resize((700, 380), Image.Resampling.LANCZOS)
-            im.save(path)
-            print("  resized ->", im.size)
-        px = im.getpixel((200, 80))
-        print("  sample", px)
+        im = Image.open(OUT / name)
+        arr = np.asarray(im)
+        mask = (arr < 250).any(axis=2)
+        ys, xs = np.where(mask)
+        pads = (xs.min(), ys.min(), im.size[0] - xs.max() - 1, im.size[1] - ys.max() - 1)
+        print(name, im.size, "pads LTRB", pads)
 
 
 if __name__ == "__main__":
