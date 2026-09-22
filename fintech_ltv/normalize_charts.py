@@ -1,4 +1,4 @@
-"""Fit LTV charts to 700x380 and match title size on cumulative_ltv to heatmap."""
+"""Normalize LTV heatmaps to 700x380; match cumulative title size to heatmap."""
 from pathlib import Path
 
 import numpy as np
@@ -43,7 +43,7 @@ def load_font(size: int) -> ImageFont.ImageFont:
     return ImageFont.load_default()
 
 
-def title_ink_height(im: Image.Image, max_y=50) -> int:
+def title_ink_height(im: Image.Image, max_y=45) -> int:
     arr = np.asarray(im.convert("RGB"))
     dark = (arr < 60).any(axis=2)
     rows = np.where(dark.any(axis=1) & (np.arange(arr.shape[0]) < max_y))[0]
@@ -52,11 +52,10 @@ def title_ink_height(im: Image.Image, max_y=50) -> int:
     return int(rows.max() - rows.min() + 1)
 
 
-def replace_title(im: Image.Image, text: str, font_size: int, band=36) -> Image.Image:
+def replace_title(im: Image.Image, text: str, font_size: int, band=34) -> Image.Image:
     out = im.convert("RGB").copy()
     w, _ = out.size
     draw = ImageDraw.Draw(out)
-    # Sample background from a title-side pixel (usually white)
     draw.rectangle([0, 0, w, band], fill=BG)
     font = load_font(font_size)
     bbox = draw.textbbox((0, 0), text, font=font)
@@ -71,23 +70,30 @@ def main():
     heatmap_path = ROOT / "source_revenue_heatmap.png"
     ltv_path = ROOT / "cumulative_ltv.png"
 
-    # Heatmap: only normalize canvas size (keep existing title)
+    # Start from current files; if already processed, still ok
     hm = fit_canvas(Image.open(heatmap_path))
     hm.save(heatmap_path)
+    ref = title_ink_height(hm)
 
-    # Cumulative: normalize + redraw title to match heatmap weight
-    ref_h = title_ink_height(hm)
-    # Heatmap title ink ≈ 12–16px after fit; use 15pt for parity
-    font_size = 15
-    ltv = fit_canvas(Image.open(ltv_path))
-    ltv = replace_title(ltv, "Накопительный LTV по когортам", font_size)
+    # Pick font size so title ink ≈ heatmap (~12–14pt → ~16–20px)
+    best_size, best_diff = 12, 10**9
+    base = fit_canvas(Image.open(ltv_path))
+    for size in range(11, 16):
+        trial = replace_title(base, "Накопительный LTV по когортам", size)
+        h = title_ink_height(trial)
+        diff = abs(h - ref)
+        print(f"  try font={size} title_h={h} ref={ref} diff={diff}")
+        if diff < best_diff:
+            best_diff, best_size = diff, size
+
+    ltv = replace_title(base, "Накопительный LTV по когортам", best_size)
     ltv.save(ltv_path)
 
-    for p in (heatmap_path, ltv_path, ROOT / "avg_cheque.png"):
+    for p in (heatmap_path, ltv_path):
         im = Image.open(p)
         box = content_box(im)
         pads = (box[0], box[1], im.size[0] - box[2], im.size[1] - box[3])
-        print(p.name, im.size, "pads", pads, "title_h", title_ink_height(im), "ref", ref_h)
+        print(p.name, im.size, "pads", pads, "title_h", title_ink_height(im))
 
 
 if __name__ == "__main__":
