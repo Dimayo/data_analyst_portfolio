@@ -1,4 +1,4 @@
-"""Generate marketplace chart PNGs at exactly 700x380 with tight margins."""
+"""Generate marketplace chart PNGs at 700x380 — seaborn darkgrid (white grids), like sporting_store ROC."""
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -11,22 +11,20 @@ OUT = Path(__file__).resolve().parent / "images"
 DPI = 100
 FIGSIZE = (7.0, 3.8)  # 700x380
 TARGET = (700, 380)
-
-AXES_BG = "#EAEAF2"
 FIG_BG = "white"
 BLUE = "#4C78A8"
 BLUE_LIGHT = "#9ECAE1"
 
 
 def style():
-    sns.set_theme(style="whitegrid", context="notebook")
+    # Same as sporting_store: default seaborn theme → darkgrid, white grid lines
+    sns.set_theme()
     plt.rcParams.update(
         {
             "figure.figsize": FIGSIZE,
             "figure.dpi": DPI,
             "savefig.dpi": DPI,
             "figure.facecolor": FIG_BG,
-            "axes.facecolor": AXES_BG,
             "savefig.facecolor": FIG_BG,
             "font.size": 10,
             "axes.titlesize": 12,
@@ -48,7 +46,6 @@ def fmt_money(x, _pos=None):
 
 
 def trim_top(im: Image.Image, keep_pad: int = 4) -> Image.Image:
-    """Crop excess white above the title, then restore 700x380."""
     arr = np.asarray(im.convert("RGB"))
     mask = (arr < 248).any(axis=2)
     ys = np.where(mask.any(axis=1))[0]
@@ -62,8 +59,8 @@ def trim_top(im: Image.Image, keep_pad: int = 4) -> Image.Image:
 
 
 def save_chart(fig, path: Path):
-    # Left margin for y-label; top tight so title sits near the edge
-    fig.subplots_adjust(left=0.14, right=0.985, top=0.93, bottom=0.14)
+    # Left: snug to y-label, no clipping
+    fig.subplots_adjust(left=0.10, right=0.985, top=0.93, bottom=0.14)
     fig.savefig(path, dpi=DPI, facecolor=FIG_BG)
     plt.close(fig)
     im = Image.open(path)
@@ -101,7 +98,6 @@ def sales_dynamics():
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     fig.patch.set_facecolor(FIG_BG)
-    ax.set_facecolor(AXES_BG)
     ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
     ax.fill_between(months, values, alpha=0.15, color=BLUE)
     ax.set_title("Динамика продаж", fontsize=12, pad=4)
@@ -122,7 +118,6 @@ def category_managers():
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     fig.patch.set_facecolor(FIG_BG)
-    ax.set_facecolor(AXES_BG)
     ax.bar(x - w / 2, fact, w, label="Факт", color=BLUE, zorder=3)
     ax.bar(x + w / 2, plan, w, label="План", color=BLUE_LIGHT, zorder=3)
     ax.set_xticks(x)
@@ -139,23 +134,9 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sales_dynamics()
     category_managers()
-    # remove old cache-bust names if present
-    for old in ("sales_trend.png", "fact_plan.png"):
-        p = OUT / old
-        if p.exists():
-            p.unlink()
     for name in ("sales_dynamics.png", "plan_vs_fact.png"):
         im = Image.open(OUT / name)
-        arr = np.asarray(im.convert("RGB"))
-        mask = (arr < 250).any(axis=2)
-        ys, xs = np.where(mask)
-        pads = (
-            int(xs.min()),
-            int(ys.min()),
-            im.size[0] - int(xs.max()) - 1,
-            im.size[1] - int(ys.max()) - 1,
-        )
-        print(name, im.size, "pads LTRB", pads)
+        print(name, im.size)
 
 
 if __name__ == "__main__":
