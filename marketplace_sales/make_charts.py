@@ -1,29 +1,50 @@
-"""Generate marketplace chart PNGs at 700x380 to match other portfolio cases."""
+"""Generate marketplace chart PNGs at 700x380 — dark DataLens-like style, one chart each."""
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
-import seaborn as sns
 
 OUT = Path(__file__).resolve().parent / "images"
 DPI = 100
 FIGSIZE = (7.0, 3.8)  # 700x380 px at 100 dpi
 
+BG = "#1e2229"
+AX_BG = "#1e2229"
+GRID = "#2f3540"
+TEXT = "#d8dde6"
+MUTED = "#9aa3b2"
+BLUE = "#4c8bf5"
+BLUE_LIGHT = "#7aa7f7"
+BLUE_FILL = "#4c8bf5"
+
 
 def style():
-    sns.set_theme(style="whitegrid", context="notebook")
     plt.rcParams.update(
         {
             "figure.figsize": FIGSIZE,
             "figure.dpi": DPI,
             "savefig.dpi": DPI,
+            "figure.facecolor": BG,
+            "axes.facecolor": AX_BG,
+            "axes.edgecolor": GRID,
+            "axes.labelcolor": MUTED,
+            "axes.titlecolor": TEXT,
+            "text.color": TEXT,
+            "xtick.color": MUTED,
+            "ytick.color": MUTED,
+            "grid.color": GRID,
+            "grid.linestyle": "-",
+            "grid.linewidth": 0.6,
             "font.size": 10,
-            "axes.titlesize": 11,
+            "axes.titlesize": 12,
             "axes.titleweight": "medium",
             "axes.labelsize": 10,
             "xtick.labelsize": 9,
             "ytick.labelsize": 9,
+            "legend.facecolor": BG,
+            "legend.edgecolor": GRID,
+            "legend.labelcolor": TEXT,
         }
     )
 
@@ -49,7 +70,6 @@ def sales_dynamics():
         "ноя '19",
         "дек '19",
     ]
-    # Values from DataLens «Динамика продаж»
     values = np.array(
         [
             1.38e6,
@@ -65,78 +85,45 @@ def sales_dynamics():
     )
 
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
-    color = "#4C78A8"
-    ax.plot(months, values, marker="o", color=color, linewidth=2, markersize=5)
-    ax.fill_between(months, values, alpha=0.12, color=color)
+    ax.plot(months, values, marker="o", color=BLUE, linewidth=2.2, markersize=5.5)
+    ax.fill_between(months, values, alpha=0.18, color=BLUE_FILL)
     ax.set_title("Динамика продаж")
     ax.set_ylabel("Выручка")
     ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
     ax.set_ylim(0, 1.45e9)
     ax.tick_params(axis="x", rotation=25)
-    fig.tight_layout()
-    fig.savefig(OUT / "sales_report.png", bbox_inches="tight", pad_inches=0.15)
-    # Force exact canvas size: redraw at fixed size without tight crop drift
-    plt.close(fig)
-
-    # Re-save at exact 700x380 (tight_layout can change pixel size)
-    fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
-    ax.plot(months, values, marker="o", color=color, linewidth=2, markersize=5)
-    ax.fill_between(months, values, alpha=0.12, color=color)
-    ax.set_title("Динамика продаж")
-    ax.set_ylabel("Выручка")
-    ax.yaxis.set_major_formatter(mticker.FuncFormatter(fmt_money))
-    ax.set_ylim(0, 1.45e9)
-    ax.tick_params(axis="x", rotation=25)
+    ax.grid(True, axis="both")
+    ax.set_axisbelow(True)
+    for spine in ax.spines.values():
+        spine.set_color(GRID)
     fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.22)
-    fig.savefig(OUT / "sales_report.png")
+    fig.savefig(OUT / "sales_report.png", facecolor=BG)
     plt.close(fig)
 
 
 def category_managers():
-    categories = [
-        "Электроника",
-        "Детские товары",
-        "Строительство и ремонт",
-        "Бытовая техника",
-        "Компьютерная техника",
-        "Товары для дома",
-    ]
-    revenue_m = np.array([2630.30, 627.55, 606.59, 585.03, 467.62, 195.95])  # млн ₽
-    units = np.array([281_945, 1_204_064, 198_774, 151_509, 109_283, 350_026])
-
-    fig, axes = plt.subplots(1, 2, figsize=FIGSIZE, dpi=DPI)
-    palette = sns.color_palette("husl", n_colors=len(categories))
-
-    # Left: revenue by category
-    y = np.arange(len(categories))
-    axes[0].barh(y, revenue_m, color=palette, height=0.7)
-    axes[0].set_yticks(y)
-    axes[0].set_yticklabels(categories, fontsize=8)
-    axes[0].invert_yaxis()
-    axes[0].set_xlabel("Факт, млн ₽")
-    axes[0].set_title("Выручка по категориям")
-    for i, v in enumerate(revenue_m):
-        axes[0].text(v + 40, i, f"{v:.0f}", va="center", fontsize=8)
-
-    # Right: plan vs fact by quarter
+    # One chart: fact vs plan by quarters (managers tab)
     quarters = ["апр '19", "июл '19", "окт '19"]
     fact = np.array([41, 521, 2395])
     plan = np.array([40, 467, 2511])
     x = np.arange(len(quarters))
-    w = 0.35
-    axes[1].bar(x - w / 2, fact, w, label="Факт", color="#4C78A8")
-    axes[1].bar(x + w / 2, plan, w, label="План", color="#9ECAE1")
-    axes[1].set_xticks(x)
-    axes[1].set_xticklabels(quarters)
-    axes[1].set_ylabel("млн ₽")
-    axes[1].set_title("Факт и план по кварталам")
-    axes[1].legend(fontsize=8, loc="upper left")
+    w = 0.36
 
-    axes[0].set_xlim(0, max(revenue_m) * 1.18)
-    fig.subplots_adjust(left=0.28, right=0.98, top=0.88, bottom=0.18, wspace=0.4)
-    fig.savefig(OUT / "category_managers.png")
+    fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
+    ax.bar(x - w / 2, fact, w, label="Факт", color=BLUE, zorder=3)
+    ax.bar(x + w / 2, plan, w, label="План", color=BLUE_LIGHT, zorder=3)
+    ax.set_xticks(x)
+    ax.set_xticklabels(quarters)
+    ax.set_ylabel("млн ₽")
+    ax.set_title("Факт и план по кварталам")
+    ax.legend(fontsize=9, loc="upper left", frameon=True)
+    ax.grid(True, axis="y")
+    ax.set_axisbelow(True)
+    for spine in ax.spines.values():
+        spine.set_color(GRID)
+    fig.subplots_adjust(left=0.12, right=0.98, top=0.88, bottom=0.16)
+    fig.savefig(OUT / "category_managers.png", facecolor=BG)
     plt.close(fig)
-    _ = units
 
 
 def main():
@@ -144,9 +131,9 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sales_dynamics()
     category_managers()
-    for name in ("sales_report.png", "category_managers.png"):
-        from PIL import Image
+    from PIL import Image
 
+    for name in ("sales_report.png", "category_managers.png"):
         im = Image.open(OUT / name)
         print(name, im.size)
         if im.size != (700, 380):
